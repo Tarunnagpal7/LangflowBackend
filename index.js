@@ -7,11 +7,13 @@ const axios = require('axios');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const frontendURL = process.env.FRONTEND_URL
+
 // Middleware
 app.use(express.json());
 app.use(cors({
-  origin: process.env.FRONTEND_URL || '*', // Configure this based on your frontend URL
-  methods: ['POST'],
+  origin: frontendURL, // Configure this based on your frontend URL
+  methods: ['GET','POST'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
@@ -94,8 +96,6 @@ app.post('/api/chat', async (req, res) => {
 
 // Start server
 app.listen(PORT, () => {
-    const backendUrl = `http://localhost:${PORT}`;
-    console.log(backendUrl)
   console.log(`Server running on port ${PORT}`);
 });
 
