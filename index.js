@@ -1,4 +1,4 @@
-// server.js
+
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -11,7 +11,14 @@ const frontendURL = process.env.FRONTEND_URL
 
 // Middleware
 app.use(express.json());
-app.use(cors());
+app.use(cors(
+  {
+    origin:"*",
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials:true,
+  }
+));
 
 
 
