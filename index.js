@@ -11,14 +11,40 @@ const frontendURL = process.env.FRONTEND_URL
 
 // Middleware
 app.use(express.json());
-app.use(cors(
-  {
-    origin:frontendURL,
-    methods: ['GET', 'POST', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials:true,
+
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  // Remove any trailing slashes from the origin
+  const cleanOrigin = origin ? origin.replace(/\/$/, '') : '';
+  
+  res.header('Access-Control-Allow-Origin', cleanOrigin);
+  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
   }
-));
+  next();
+});
+
+// Also update your cors middleware configuration
+app.use(cors({
+  origin: (origin, callback) => {
+    // Remove any trailing slashes from the origin
+    const cleanOrigin = origin ? origin.replace(/\/$/, '') : '';
+    callback(null, cleanOrigin);
+  },
+  credentials: true
+}));
+// app.use(cors(
+//   {
+//     origin:frontendURL,
+//     methods: ['GET', 'POST', 'OPTIONS'],
+//     allowedHeaders: ['Content-Type', 'Authorization'],
+//     credentials:true,
+//   }
+// ));
 
 
 
